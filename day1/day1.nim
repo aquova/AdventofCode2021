@@ -1,9 +1,10 @@
 # Advent of Code 2021 Day 1
 
+from math import sum
 from strutils import parseInt
 
-type RollingAverage = array[3, int]
-type Windows = array[3, RollingAverage]
+const ARRAY_SIZE = 3
+type RollingAverage = array[ARRAY_SIZE, int]
 
 proc part1() =
   var increases = 0
@@ -19,19 +20,16 @@ proc part1() =
 proc part2() =
   var increases = 0
   var prev = 9999
-  var window: Windows
+  var window: RollingAverage
   var array_idx = 0
   for line in lines("input.txt"):
     let depth = parseInt(line)
-    for w in low(window)..high(window):
-      let i = (array_idx + w) mod 3
-      window[w][i] = depth
-      if i == high(window[0]) and array_idx > 1:
-        let rolling_depth = window[w][0] + window[w][1] + window[w][2]
-        if rolling_depth > prev:
-          inc(increases)
-        prev = rolling_depth
+    window[array_idx mod ARRAY_SIZE] = depth
     inc(array_idx)
+    let rolling_depth = sum(window)
+    if rolling_depth > prev and array_idx >= ARRAY_SIZE:
+      inc(increases)
+    prev = rolling_depth
   echo(increases)
 
 part1()
