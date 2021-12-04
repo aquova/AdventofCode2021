@@ -64,28 +64,31 @@ proc day4(trying_to_lose: bool) =
         bingo_cards: seq[BingoCard]
         curr_tbl: seq[int]
 
-    if open(f, "input.txt"):
-        # First, read in our bingo numbers
-        discard f.readLine(line)
-        let raw_seq = line.split({','})
-        for v in raw_seq:
-            let num = parseInt(v)
-            bingo_nums.add(num)
+    if not open(f, "input.txt"):
+        echo("Unable to open file")
+        return
 
-        # Skip blank line
-        discard f.readLine(line)
-        # Now read in all the bingo tables
-        while f.readLine(line):
-            if line == "":
-                var new_card = BingoCard()
-                populate_card(new_card, curr_tbl)
-                bingo_cards.add(new_card)
-                curr_tbl = @[]
-            else:
-                let raw = line.splitWhitespace
-                for v in raw:
-                    let num = parseInt(v)
-                    curr_tbl.add(num)
+    # First, read in our bingo numbers
+    discard f.readLine(line)
+    let raw_seq = line.split({','})
+    for v in raw_seq:
+        let num = parseInt(v)
+        bingo_nums.add(num)
+
+    # Skip blank line
+    discard f.readLine(line)
+    # Now read in all the bingo tables
+    while f.readLine(line):
+        if line == "":
+            var new_card = BingoCard()
+            populate_card(new_card, curr_tbl)
+            bingo_cards.add(new_card)
+            curr_tbl = @[]
+        else:
+            let raw = line.splitWhitespace
+            for v in raw:
+                let num = parseInt(v)
+                curr_tbl.add(num)
 
     # Save off the last one
     if len(curr_tbl) > 0:
