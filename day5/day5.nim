@@ -1,34 +1,25 @@
-# Advent of Code 2021 Day 5
+#Advent of Code 2021 Day 5
 
-from strutils import parseInt
-import re
-import sequtils
+from math import sgn
+import strscans
 
 const ARRAY_SIZE = 1000
 type Vents = array[ARRAY_SIZE, array[ARRAY_SIZE, int]]
-
-proc sign(num: int): int =
-    if num == 0:
-        return 0
-    else:
-        return int(num / abs(num))
 
 proc day5(allowing_diagonals: bool) =
     var vents: Vents
     var count = 0
     for line in lines("input.txt"):
-        # Theoretically 'matches' can be a seq, but I couldn't figure out how
-        var matches: array[4, string]
-        if match(line, re"(\d+),(\d+) -> (\d+),(\d+)", matches):
-            let pts = toSeq(matches).map(parseInt)
-            if not allowing_diagonals and pts[0] != pts[2] and pts[1] != pts[3]:
+        let (success, x1, y1, x2, y2) = scanTuple(line, "$i,$i -> $i,$i")
+        if success:
+            if not allowing_diagonals and x1 != x2 and y1 != y2:
                 continue
-            let dx = sign(pts[2] - pts[0])
-            let dy = sign(pts[3] - pts[1])
-            var x = pts[0]
-            var y = pts[1]
+            let dx = sgn(x2 - x1)
+            let dy = sgn(y2 - y1)
+            var x = x1
+            var y = y1
             while true:
-                let should_break = (x == pts[2] and y == pts[3])
+                let should_break = (x == x2 and y == y2)
                 inc(vents[x][y])
                 if vents[x][y] == 2:
                     inc(count)
