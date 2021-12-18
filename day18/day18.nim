@@ -128,7 +128,7 @@ proc parse_line(l: string): Node =
 
 proc part1() =
     var root: Node
-    for line in lines("test2.txt"):
+    for line in lines("input.txt"):
         var n = parse_line(line)
         if root == nil:
             root = n
